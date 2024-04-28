@@ -1,0 +1,15 @@
+{
+    "name": "dm1tru/barcoder",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Dm1tru\\Barcoder\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "DmitryAleynik"
+        }
+    ],
+    "require": {}
+}
