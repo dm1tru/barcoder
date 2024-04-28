@@ -11,5 +11,7 @@
             "name": "DmitryAleynik"
         }
     ],
-    "require": {}
+    "require": {
+        "workerman/workerman": "^4.1"
+    }
 }
