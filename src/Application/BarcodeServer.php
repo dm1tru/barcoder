@@ -16,11 +16,10 @@ class BarcodeServer
     private array $device_ids = [];
 
     public function __construct(
-        \Psr\Log\LoggerInterface   $logger,
-        DeviceRepositoryInterface  $deviceRepository,
+        \Psr\Log\LoggerInterface $logger,
+        DeviceRepositoryInterface $deviceRepository,
         BarcodeRepositoryInterface $barcodeRepository
-    )
-    {
+    ) {
         $this->deviceRepository = $deviceRepository;
         $this->barcodeRepository = $barcodeRepository;
 
@@ -102,7 +101,6 @@ class BarcodeServer
             'barcode_id' => $id->getId(),
             'device_id' => $dev_id
         ]);
-
     }
 
     public function run()
