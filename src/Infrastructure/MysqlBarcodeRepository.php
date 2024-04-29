@@ -24,18 +24,18 @@ class MysqlBarcodeRepository implements BarcodeRepositoryInterface
 
         $this->_qInsert = $this->pdo->prepare(
             "INSERT INTO barcodes 
-            SET code = :code, count = :count, date = FROM_UNIXTIME(:date)"
+            SET code = :code, count = :count, date = FROM_UNIXTIME(:date), device_id = :device_id"
         );
 
         $this->_qGetAll = $this->pdo->prepare(
-            "SELECT id, count, code, UNIX_TIMESTAMP(date) as date
+            "SELECT id, count, code, UNIX_TIMESTAMP(date) as date, device_id
             FROM barcodes
             ORDER BY id 
             LIMIT :limit OFFSET :offset"
         );
 
         $this->_qGetAfterDate = $this->pdo->prepare(
-            "SELECT id, count, code, UNIX_TIMESTAMP(date) as date
+            "SELECT id, count, code, UNIX_TIMESTAMP(date) as date, device_id
             FROM barcodes
             WHERE date >= FROM_UNIXTIME(:date)
             ORDER BY id LIMIT :limit OFFSET :offset"
@@ -54,7 +54,8 @@ class MysqlBarcodeRepository implements BarcodeRepositoryInterface
         $this->_qInsert->execute([
             'code' => $barcode->getCode()->getCode(),
             'count' => $barcode->getCount()->getCount(),
-            'date' => $barcode->getDate()->getTimestamp()
+            'date' => $barcode->getDate()->getTimestamp(),
+            'device_id' => $barcode->getDeviceId()->getId()
         ]);
 
         return new Id($this->pdo->lastInsertId());
@@ -69,6 +70,7 @@ class MysqlBarcodeRepository implements BarcodeRepositoryInterface
         while ($ret = $this->_qGetAll->fetch(PDO::FETCH_ASSOC)) {
             $barcodes[] = new Barcode(
                 new Id($ret['id']),
+                new Id($ret['devive_id']),
                 new Code($ret['code']),
                 new Count($ret['count']),
                 new Date($ret['date'])
@@ -89,6 +91,7 @@ class MysqlBarcodeRepository implements BarcodeRepositoryInterface
         while ($ret = $this->_qGetAfterDate->fetch(PDO::FETCH_ASSOC)) {
             $barcodes[] = new Barcode(
                 new Id($ret['id']),
+                new Id($ret['device_id']),
                 new Code($ret['code']),
                 new Count($ret['count']),
                 new Date($ret['date'])

@@ -13,13 +13,15 @@ class Barcode
     private Code $code;
     private Count $count;
     private Date $date;
+    private Id $deviceId;
 
-    public function __construct(Id $id, Code $code, Count $count, Date $date)
+    public function __construct(Id $id, Id $deviceId, Code $code, Count $count, Date $date)
     {
         $this->id = $id;
         $this->code = $code;
         $this->count = $count;
         $this->date = $date;
+        $this->deviceId = $deviceId;
     }
 
     public function getId(): Id
@@ -40,5 +42,10 @@ class Barcode
     public function getDate(): Date
     {
         return $this->date;
+    }
+
+    public function getDeviceId()
+    {
+        return $this->deviceId;
     }
 }

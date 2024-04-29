@@ -12,6 +12,7 @@
         }
     ],
     "require": {
-        "workerman/workerman": "^4.1"
+        "workerman/workerman": "^4.1",
+        "monolog/monolog": "^3.6"
     }
 }
