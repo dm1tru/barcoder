@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dm1tru\Barcoder;
 
 use Dm1tru\Barcoder\Application\BarcodeServer;
+use Dm1tru\Barcoder\Infrastructure\MysqlBarcodeRepository;
 use Dm1tru\Barcoder\Infrastructure\MysqlDeviceRepository;
 use Monolog\Level;
 use Monolog\Logger;

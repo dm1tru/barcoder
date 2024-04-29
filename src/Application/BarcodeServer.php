@@ -2,6 +2,7 @@
 
 namespace Dm1tru\Barcoder\Application;
 
+use Dm1tru\Barcoder\Domain\Entity\Barcode;
 use Dm1tru\Barcoder\Domain\Repository\BarcodeRepositoryInterface;
 use Dm1tru\Barcoder\Domain\Repository\DeviceRepositoryInterface;
 use Workerman\Worker;
@@ -15,10 +16,11 @@ class BarcodeServer
     private array $device_ids = [];
 
     public function __construct(
-        \Psr\Log\LoggerInterface $logger,
-        DeviceRepositoryInterface $deviceRepository,
+        \Psr\Log\LoggerInterface   $logger,
+        DeviceRepositoryInterface  $deviceRepository,
         BarcodeRepositoryInterface $barcodeRepository
-    ) {
+    )
+    {
         $this->deviceRepository = $deviceRepository;
         $this->barcodeRepository = $barcodeRepository;
 
@@ -31,30 +33,11 @@ class BarcodeServer
         $this->worker->onMessage = [$this, 'message'];
         $this->worker->onClose = [$this, 'close'];
         $this->logger->info('BarcodeServer created');
-
-        /*
-                $tcp_worker->onMessage = function ($connection, $data) {
-                    //$request->get();
-                    //$request->post();
-                    //$request->header();
-                    //$request->cookie();
-                    //$request->session();
-                    //$request->uri();
-                    //$request->path();
-                    //$request->method();
-
-                    // Send data to client
-                    //$connection->send("Hello $data \n");
-                };
-        */
-
-// Emitted when connection is closed
     }
 
     public function close($connection)
     {
         $this->logger->info('BarcodeServer connection close', ['id' => $connection->id]);
-        //echo "Connection closed\n";
     }
 
     public function connect($connection)
@@ -86,16 +69,40 @@ class BarcodeServer
     public function message($connection, $data)
     {
         $data = trim($data);
-        echo "Message: $data\n";
-
-        var_dump($data);
 
         if ($data == 'exit') {
-            $connection->close('close message');
+            $connection->close();
+            return;
         }
-        //var_dump($connection);
 
-        //$connection->send("Hello $data \n");
+
+        if (preg_match('/^(.+)\,([0-9]+)$/i', $data, $m)) {
+            $code = $m[1];
+            $count = (int)$m[2];
+        } else {
+            $code = $data;
+            $count = 1;
+        }
+
+        $dev_id = $this->device_ids[$connection->id];
+
+        $barcode = new Barcode(
+            new \Dm1tru\Barcoder\Domain\ValueObject\Id(0),
+            new \Dm1tru\Barcoder\Domain\ValueObject\Id($dev_id),
+            new \Dm1tru\Barcoder\Domain\ValueObject\Code($code),
+            new \Dm1tru\Barcoder\Domain\ValueObject\Count($count),
+            new \Dm1tru\Barcoder\Domain\ValueObject\Date()
+        );
+
+        $id = $this->barcodeRepository->add($barcode);
+        $this->logger->info('BarcodeServer add barcode', [
+            'id' => $connection->id,
+            'code' => $code,
+            'count' => $count,
+            'barcode_id' => $id->getId(),
+            'device_id' => $dev_id
+        ]);
+
     }
 
     public function run()
