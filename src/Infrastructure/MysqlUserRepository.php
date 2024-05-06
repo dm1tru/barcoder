@@ -2,26 +2,22 @@
 
 namespace Dm1tru\Barcoder\Infrastructure;
 
-use Dm1tru\Barcoder\Domain\Entity\Barcode;
-use Dm1tru\Barcoder\Domain\Entity\Device;
-use Dm1tru\Barcoder\Domain\Repository\BarcodeRepositoryInterface;
-use Dm1tru\Barcoder\Domain\Repository\DeviceRepositoryInterface;
-use Dm1tru\Barcoder\Domain\ValueObject\Code;
-use Dm1tru\Barcoder\Domain\ValueObject\Count;
-use Dm1tru\Barcoder\Domain\ValueObject\Date;
+
+use Dm1tru\Barcoder\Domain\Entity\User;
+use Dm1tru\Barcoder\Domain\Repository\UserRepositoryInterface;
 use Dm1tru\Barcoder\Domain\ValueObject\Id;
-use Dm1tru\Barcoder\Domain\ValueObject\Ip;
 use Dm1tru\Barcoder\Domain\ValueObject\Name;
-use Dm1tru\Barcoder\Domain\ValueObject\Order;
+
+use Dm1tru\Barcoder\Domain\ValueObject\Token;
 use PDO;
 use PDOStatement;
 
-class MysqlDeviceRepository implements DeviceRepositoryInterface
+class MysqlUserRepository implements UserRepositoryInterface
 {
     private PDO $pdo;
     private PDOStatement $_qInsert;
     private PDOStatement $_qGetAll;
-    private PDOStatement $_qGetById;
+    private PDOStatement $_qGetByToken;
 
     public function __construct()
     {
@@ -38,10 +34,11 @@ class MysqlDeviceRepository implements DeviceRepositoryInterface
             ORDER BY `order`, id"
         );
 
-        $this->_qGetById = $this->pdo->prepare(
-            "SELECT id, name, host, `order`
-            FROM devices
-            WHERE id = ?"
+        $this->_qGetByToken = $this->pdo->prepare(
+            "SELECT id, name, token
+            FROM `users`
+            WHERE token = ?
+            ORDER BY id LIMIT 1"
         );
     }
 
@@ -52,8 +49,9 @@ class MysqlDeviceRepository implements DeviceRepositoryInterface
         $this->pdo = new \PDO($dsn, $conf['MYSQL_USER'], $conf['MYSQL_PASSWORD']);
     }
 
-    public function add(Device $device): Id
+    public function add(User $user): Id
     {
+        /*
         $this->_qInsert->execute([
             'name' => $device->getName()->getName(),
             'count' => $device->getCount()->getCount(),
@@ -62,6 +60,7 @@ class MysqlDeviceRepository implements DeviceRepositoryInterface
         ]);
 
         return new Id($this->pdo->lastInsertId());
+        */
     }
 
     public function getAll(): array
@@ -81,18 +80,20 @@ class MysqlDeviceRepository implements DeviceRepositoryInterface
         return $devices;
     }
 
-    public function getById(Id $id): ?Device
+    public function getById(Id $id): ?User
     {
-        $this->_qGetById->execute([$id->getId()]);
-        $ret = $this->_qGetById->fetch(PDO::FETCH_ASSOC);
+        return new User();
+    }
+
+    public function getByToken(Token $token): ?User
+    {
+
+        $this->_qGetByToken->execute([$token->getToken()]);
+        $ret = $this->_qGetByToken->fetch(PDO::FETCH_ASSOC);
         if (!$ret) {
             return null;
         }
-        return new Device(
-            new Id($ret['id']),
-            new Name($ret['name']),
-            new Ip($ret['host']),
-            new Order($ret['order'])
-        );
+
+        return new User(new Id($ret['id']), new Name($ret['name']), new Token($ret['token']));
     }
 }

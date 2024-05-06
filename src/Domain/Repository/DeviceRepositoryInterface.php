@@ -13,5 +13,5 @@ interface DeviceRepositoryInterface
 
     public function getAll(): array;
 
-    public function getById(Id $id): Device;
+    public function getById(Id $id): ?Device;
 }

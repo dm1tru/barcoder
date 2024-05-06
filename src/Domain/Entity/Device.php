@@ -41,4 +41,14 @@ class Device
     {
         return $this->order;
     }
+
+    public function asArray(): array
+    {
+        return [
+            'id' => $this->id->getId(),
+            'name' => $this->name->getName(),
+            'host' => $this->host->getIp(),
+            'order' => $this->order->getOrder()
+        ];
+    }
 }
