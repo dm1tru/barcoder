@@ -41,7 +41,6 @@ class MysqlDeviceRepository implements DeviceRepositoryInterface
     private function connect(): void
     {
         $conf = parse_ini_file('config.ini', true);
-        var_dump($conf);
         $dsn = "mysql:host=$conf[MYSQL_HOST];dbname=$conf[MYSQL_DATABASE]";
         $this->pdo = new \PDO($dsn, $conf['MYSQL_USER'], $conf['MYSQL_PASSWORD']);
     }

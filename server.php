@@ -6,5 +6,10 @@ require 'vendor/autoload.php';
 
 use Dm1tru\Barcoder\App;
 
-$app = new App();
-$app->runBarcodeServer();
+
+try {
+    $app = new App();
+    $app->runBarcodeServer();
+} catch (Exception $e) {
+    var_dump($e->getMessage());
+}
