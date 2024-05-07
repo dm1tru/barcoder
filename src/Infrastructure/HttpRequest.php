@@ -9,7 +9,6 @@ class HttpRequest implements RequestInterface
 {
     public function __construct()
     {
-
     }
 
     public function getPath(): array

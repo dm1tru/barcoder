@@ -16,4 +16,3 @@ class Response
         return json_encode(['response' => $this->data]);
     }
 }
-

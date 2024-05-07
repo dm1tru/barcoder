@@ -6,23 +6,22 @@ use Dm1tru\Barcoder\Domain\Entity\Response;
 use Dm1tru\Barcoder\Domain\Entity\User;
 use Dm1tru\Barcoder\Domain\Repository\BarcodeRepositoryInterface;
 use Dm1tru\Barcoder\Domain\Repository\DeviceRepositoryInterface;
+use Dm1tru\Barcoder\Domain\ValueObject\Date;
 use Dm1tru\Barcoder\Domain\ValueObject\Id;
 
 class Api
 {
-
     private array $path;
     private User $user;
     private DeviceRepositoryInterface $deviceRepository;
     private BarcodeRepositoryInterface $barcodeRepository;
 
     public function __construct(
-        array                      $path,
-        User                       $user,
-        DeviceRepositoryInterface  $deviceRepository,
+        array $path,
+        User $user,
+        DeviceRepositoryInterface $deviceRepository,
         BarcodeRepositoryInterface $barcodeRepository
-    )
-    {
+    ) {
         $this->path = $path;
         $this->user = $user;
         $this->deviceRepository = $deviceRepository;
@@ -34,6 +33,9 @@ class Api
         switch ($this->path[0]) {
             case 'devices':
                 return $this->getDevices();
+                break;
+            case 'codes':
+                return $this->getCodes();
                 break;
             default:
                 throw new \Exception("Неверная команда", 404);
@@ -80,5 +82,30 @@ class Api
         return $resp;
     }
 
+    private function getCodes()
+    {
+        $ts = 0;
+        if (count($this->path) == 1) {
+            $ts = 0;
+        }
+        if (count($this->path) == 2) {
+            if (preg_match('/^([0-9]+)$/i', $this->path[1], $m)) {
+                $ts = (int)$m[1];
+            } else {
+                throw  new \Exception("Неверная команда", 404);
+            }
+        }
 
+        if (count($this->path) > 2) {
+            throw new \Exception("Неверная команда", 404);
+        }
+
+        $codes = $this->barcodeRepository->getAfterDate(new Date($ts));
+        $ret = [];
+        foreach ($codes as $code) {
+            $ret[] = $code->asArray();
+        }
+        $resp = new Response($ret);
+        return $resp;
+    }
 }

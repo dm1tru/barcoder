@@ -9,5 +9,4 @@ interface RequestInterface
     public function getPath(): array;
 
     public function getAuthToken(): Token;
-
 }

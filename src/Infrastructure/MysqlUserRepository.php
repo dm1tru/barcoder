@@ -2,12 +2,10 @@
 
 namespace Dm1tru\Barcoder\Infrastructure;
 
-
 use Dm1tru\Barcoder\Domain\Entity\User;
 use Dm1tru\Barcoder\Domain\Repository\UserRepositoryInterface;
 use Dm1tru\Barcoder\Domain\ValueObject\Id;
 use Dm1tru\Barcoder\Domain\ValueObject\Name;
-
 use Dm1tru\Barcoder\Domain\ValueObject\Token;
 use PDO;
 use PDOStatement;

@@ -48,4 +48,15 @@ class Barcode
     {
         return $this->deviceId;
     }
+
+    public function asArray(): array
+    {
+        return [
+            'id' => $this->id->getId(),
+            'code' => $this->code->getCode(),
+            'count' => $this->count->getCount(),
+            'date' => $this->date->getTimestamp(),
+            'device_id' => $this->deviceId->getId()
+        ];
+    }
 }
