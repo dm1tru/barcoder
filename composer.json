@@ -13,6 +13,7 @@
     ],
     "require": {
         "workerman/workerman": "^4.1",
-        "monolog/monolog": "^3.6"
+        "monolog/monolog": "^3.6",
+        "php-amqplib/php-amqplib": "^3.6"
     }
 }
