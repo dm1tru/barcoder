@@ -52,7 +52,8 @@ $(function () {
     setServerState(false);
 })
 
-function log(msg, type = '') {
+function log(msg, type = '')
+{
     var date = new Date();
 
     var row = $('<tr></tr>').addClass(type);
@@ -64,7 +65,8 @@ function log(msg, type = '') {
     $('table#table-log').append(row);
 }
 
-function setServerState(state) {
+function setServerState(state)
+{
     var badge = $('#server-state');
     badge.html(state ? 'Подключен' : "Отключен");
     badge.removeClass('text-bg-primary').removeClass('text-bg-warning');
