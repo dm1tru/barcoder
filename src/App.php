@@ -11,6 +11,7 @@ use Dm1tru\Barcoder\Infrastructure\HttpRequest;
 use Dm1tru\Barcoder\Infrastructure\MysqlBarcodeRepository;
 use Dm1tru\Barcoder\Infrastructure\MysqlDeviceRepository;
 use Dm1tru\Barcoder\Infrastructure\MysqlUserRepository;
+use Dm1tru\Barcoder\Infrastructure\RabbitMQQueue;
 use Monolog\Level;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
@@ -25,7 +26,9 @@ class App
         $deviceRepository = new MysqlDeviceRepository();
         $barcodeRepository = new MysqlBarcodeRepository();
 
-        $server = new BarcodeServer($log, $deviceRepository, $barcodeRepository);
+        $queue = new RabbitMQQueue();
+
+        $server = new BarcodeServer($log, $deviceRepository, $barcodeRepository, $queue);
         $server->run();
     }
 

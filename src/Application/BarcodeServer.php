@@ -13,20 +13,24 @@ class BarcodeServer
     private \Psr\Log\LoggerInterface $logger;
     private DeviceRepositoryInterface $deviceRepository;
     private BarcodeRepositoryInterface $barcodeRepository;
+    private QueueInterface $queue;
     private array $device_ids = [];
 
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
         DeviceRepositoryInterface $deviceRepository,
-        BarcodeRepositoryInterface $barcodeRepository
+        BarcodeRepositoryInterface $barcodeRepository,
+        QueueInterface $queue
     ) {
         $this->deviceRepository = $deviceRepository;
         $this->barcodeRepository = $barcodeRepository;
 
+        $this->queue = $queue;
+
         $this->logger = $logger;
 
         $conf = parse_ini_file('config.ini', true);
-        $this->worker = new Worker("tcp://$conf[TCP_SERVER_HOST]:$conf[TCP_SERVER_PORT]");
+        $this->worker = new Worker("tcp://0.0.0.0:$conf[TCP_SERVER_PORT]");
         $this->worker->count = 2;
         $this->worker->onConnect = [$this, 'connect'];
         $this->worker->onMessage = [$this, 'message'];
@@ -94,6 +98,9 @@ class BarcodeServer
         );
 
         $id = $this->barcodeRepository->add($barcode);
+
+        $this->queue->send($barcode);
+
         $this->logger->info('BarcodeServer add barcode', [
             'id' => $connection->id,
             'code' => $code,
