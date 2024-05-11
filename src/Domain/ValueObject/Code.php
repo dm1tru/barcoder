@@ -8,7 +8,7 @@ class Code
 
     public function __construct(string $code)
     {
-        $this->code = $code;
+        $this->code = trim($code);
     }
 
     public function getCode(): string

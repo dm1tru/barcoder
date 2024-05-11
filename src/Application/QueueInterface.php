@@ -8,5 +8,5 @@ interface QueueInterface
 {
     public function send(Barcode $code): void;
 
-    public function receive(): ?Barcode;
+    public function consume(callable $callback): void;
 }

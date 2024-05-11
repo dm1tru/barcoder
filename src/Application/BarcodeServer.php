@@ -2,9 +2,15 @@
 
 namespace Dm1tru\Barcoder\Application;
 
+use Dm1tru\Barcoder\Domain\Entity;
 use Dm1tru\Barcoder\Domain\Entity\Barcode;
+use Dm1tru\Barcoder\Domain\ValueObject;
 use Dm1tru\Barcoder\Domain\Repository\BarcodeRepositoryInterface;
 use Dm1tru\Barcoder\Domain\Repository\DeviceRepositoryInterface;
+use Dm1tru\Barcoder\Domain\ValueObject\Code;
+use Dm1tru\Barcoder\Domain\ValueObject\Count;
+use Dm1tru\Barcoder\Domain\ValueObject\Date;
+use Dm1tru\Barcoder\Domain\ValueObject\Id;
 use Workerman\Worker;
 
 class BarcodeServer
@@ -17,11 +23,12 @@ class BarcodeServer
     private array $device_ids = [];
 
     public function __construct(
-        \Psr\Log\LoggerInterface $logger,
-        DeviceRepositoryInterface $deviceRepository,
+        \Psr\Log\LoggerInterface   $logger,
+        DeviceRepositoryInterface  $deviceRepository,
         BarcodeRepositoryInterface $barcodeRepository,
-        QueueInterface $queue
-    ) {
+        QueueInterface             $queue
+    )
+    {
         $this->deviceRepository = $deviceRepository;
         $this->barcodeRepository = $barcodeRepository;
 
@@ -31,7 +38,7 @@ class BarcodeServer
 
         $conf = parse_ini_file('config.ini', true);
         $this->worker = new Worker("tcp://0.0.0.0:$conf[TCP_SERVER_PORT]");
-        $this->worker->count = 2;
+        $this->worker->count = 1;
         $this->worker->onConnect = [$this, 'connect'];
         $this->worker->onMessage = [$this, 'message'];
         $this->worker->onClose = [$this, 'close'];
@@ -78,7 +85,6 @@ class BarcodeServer
             return;
         }
 
-
         if (preg_match('/^(.+)\,([0-9]+)$/i', $data, $m)) {
             $code = $m[1];
             $count = (int)$m[2];
@@ -90,11 +96,11 @@ class BarcodeServer
         $dev_id = $this->device_ids[$connection->id];
 
         $barcode = new Barcode(
-            new \Dm1tru\Barcoder\Domain\ValueObject\Id(0),
-            new \Dm1tru\Barcoder\Domain\ValueObject\Id($dev_id),
-            new \Dm1tru\Barcoder\Domain\ValueObject\Code($code),
-            new \Dm1tru\Barcoder\Domain\ValueObject\Count($count),
-            new \Dm1tru\Barcoder\Domain\ValueObject\Date()
+            new Id(0),
+            new Id($dev_id),
+            new Code($code),
+            new Count($count),
+            new Date()
         );
 
         $id = $this->barcodeRepository->add($barcode);

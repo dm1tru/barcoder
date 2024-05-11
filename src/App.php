@@ -6,6 +6,7 @@ namespace Dm1tru\Barcoder;
 
 use Dm1tru\Barcoder\Application\Api;
 use Dm1tru\Barcoder\Application\BarcodeServer;
+use Dm1tru\Barcoder\Application\WebsocketServer;
 use Dm1tru\Barcoder\Domain\Entity\User;
 use Dm1tru\Barcoder\Infrastructure\HttpRequest;
 use Dm1tru\Barcoder\Infrastructure\MysqlBarcodeRepository;
@@ -18,6 +19,15 @@ use Monolog\Handler\StreamHandler;
 
 class App
 {
+    public function runWebsocketServer()
+    {
+        $log = new Logger('name');
+        $log->pushHandler(new StreamHandler(__DIR__ . '/../log/log.log', Level::Debug));
+        $queue = new RabbitMQQueue();
+        $server = new WebsocketServer($log, $queue);
+        $server->run();
+    }
+
     public function runBarcodeServer()
     {
         $log = new Logger('name');

@@ -29,7 +29,6 @@ class RabbitMQQueue implements QueueInterface
 
     private function makeChannel($queue_name)
     {
-
         $this->channel = $this->connection->channel();
         $this->channel->queue_declare($queue_name, false, false, false, false);
     }
@@ -40,9 +39,9 @@ class RabbitMQQueue implements QueueInterface
         $this->channel->basic_publish($msg, '', $this->queue_name);
     }
 
-    public function receive(): ?Barcode
+    public function consume(callable $callback): void
     {
-        // TODO: Implement receive() method.
-        return null;
+        $this->channel->wait(null, true);
+        $this->channel->basic_consume($this->queue_name, '', false, true, false, false, $callback);
     }
 }
