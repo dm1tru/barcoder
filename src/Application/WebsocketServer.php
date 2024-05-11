@@ -2,7 +2,6 @@
 
 namespace Dm1tru\Barcoder\Application;
 
-
 use Workerman\Timer;
 use Workerman\Worker;
 
@@ -14,9 +13,8 @@ class WebsocketServer
 
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
-        QueueInterface           $queue
-    )
-    {
+        QueueInterface $queue
+    ) {
         $this->queue = $queue;
         $this->logger = $logger;
 
