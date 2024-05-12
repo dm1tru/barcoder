@@ -57,10 +57,7 @@ class App
 
         $queue = new RabbitMQQueue();
 
-
         $api = new Api($request, $user, $deviceRepository, $barcodeRepository, $queue);
-        $response = $api->getResponse();
-
-        var_dump($response->getJson());
+        $api->makeResponse();
     }
 }

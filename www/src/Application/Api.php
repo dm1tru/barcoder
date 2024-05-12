@@ -37,20 +37,25 @@ class Api
         $this->queue = $queue;
     }
 
-    public function getResponse(): ?Response
+    public function makeResponse()
     {
-
-        $this->path = $this->request->getPath();
-        switch ($this->path[0]) {
-            case 'devices':
-                return $this->getDevices();
-                break;
-            case 'codes':
-                return $this->getCodes();
-                break;
-            default:
-                throw new \Exception("Неверная команда", 404);
-                break;
+        try {
+            $this->path = $this->request->getPath();
+            switch ($this->path[0]) {
+                case 'devices':
+                    $response = $this->getDevices();
+                    break;
+                case 'codes':
+                    $response = $this->getCodes();
+                    break;
+                default:
+                    throw new \Exception("Неверная команда", 404);
+                    $response;
+            }
+        } catch (\Exception $e) {
+            $response = new Response(['error' => $e->getMessage()], $e->getCode());
+        } finally {
+            $response->send();
         }
     }
 
