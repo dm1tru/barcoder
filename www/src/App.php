@@ -7,6 +7,7 @@ namespace Dm1tru\Barcoder;
 use Dm1tru\Barcoder\Application\Api;
 use Dm1tru\Barcoder\Application\BarcodeServer;
 use Dm1tru\Barcoder\Application\WebsocketServer;
+use Dm1tru\Barcoder\Domain\Entity\Response;
 use Dm1tru\Barcoder\Domain\Entity\User;
 use Dm1tru\Barcoder\Infrastructure\HttpRequest;
 use Dm1tru\Barcoder\Infrastructure\MysqlBarcodeRepository;
@@ -52,7 +53,10 @@ class App
         $barcodeRepository = new MysqlBarcodeRepository();
 
         if (!$user) {
-            throw new \Exception('Not found user', 403);
+            $resp = new Response('Not found user', 403);
+            $resp->send();
+            return;
+            //throw new \Exception('Not found user', 403);
         }
 
         $queue = new RabbitMQQueue();
