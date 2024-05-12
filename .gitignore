@@ -1,6 +1,12 @@
-/vendor/
+/www/vendor/
 .idea
-config.ini
-composer.lock
-/log/*
-/helpers/
+/www/config.ini
+/www/composer.lock
+/www/log/*
+/www/helpers/
+/volumes/mysql/*
+!/volumes/mysql/.gitkeep
+/volumes/rabbitmq/*
+!/volumes/rabbitmq/.gitkeep
+/volumes/socket/*
+!/volumes/socket/.gitkeep

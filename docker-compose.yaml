@@ -1,0 +1,85 @@
+services:
+  nginx:
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    image: nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./www:/var/www/html/
+      - ./volumes/socket:/socket
+    depends_on:
+      - php
+    networks:
+      - dev-net
+
+  php:
+    build:
+      context: ./docker/php-fpm
+      dockerfile: Dockerfile
+    image: php-fpm # имя будущего образа
+    container_name: php # имя контейнера после запуска
+    volumes:
+      - ./www:/var/www/html/
+      - ./volumes/socket:/socket
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    depends_on:
+      - mysql
+    networks:
+      - dev-net
+
+  mysql:
+    build:
+      context: ./docker/mysql
+      dockerfile: Dockerfile
+    image: mysql
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./volumes/mysql:/var/db/mysql/mysql
+    networks:
+      - dev-net
+
+
+  php-cli:
+    build:
+      context: ./docker/php-cli
+      dockerfile: Dockerfile
+    image: php-cli
+    container_name: php-cli
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    depends_on:
+      - mysql
+      - rabbitmq
+    links:
+      - rabbitmq
+    networks:
+      - dev-net
+
+
+  rabbitmq:
+    image: rabbitmq:3.13.2-management
+    hostname: rabbitmq
+    volumes:
+      - ./volumes/rabbitmq:/var/lib/rabbitmq
+    ports:
+      - 15672:15672
+    networks:
+      - dev-net
+
+#Docker Networks
+networks:
+  dev-net:
+    driver: bridge
