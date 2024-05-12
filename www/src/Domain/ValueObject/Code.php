@@ -8,7 +8,7 @@ class Code
 
     public function __construct(string $code)
     {
-        $this->code = trim($code);
+        $this->code = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)%&-]/s', '', $code);
     }
 
     public function getCode(): string
