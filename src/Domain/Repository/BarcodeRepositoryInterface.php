@@ -8,7 +8,7 @@ use Dm1tru\Barcoder\Domain\ValueObject\Id;
 
 interface BarcodeRepositoryInterface
 {
-    public function add(Barcode $barcode): Id;
+    public function add(Barcode $barcode): Barcode;
 
     public function getAll(int $limit = 100, int $offset = 0): array;
 

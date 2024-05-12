@@ -49,7 +49,7 @@ class MysqlBarcodeRepository implements BarcodeRepositoryInterface
         $this->pdo = new \PDO($dsn, $conf['MYSQL_USER'], $conf['MYSQL_PASSWORD']);
     }
 
-    public function add(Barcode $barcode): Id
+    public function add(Barcode $barcode): Barcode
     {
         $this->_qInsert->execute([
             'code' => $barcode->getCode()->getCode(),
@@ -57,8 +57,9 @@ class MysqlBarcodeRepository implements BarcodeRepositoryInterface
             'date' => $barcode->getDate()->getTimestamp(),
             'device_id' => $barcode->getDeviceId()->getId()
         ]);
+        $id = new Id($this->pdo->lastInsertId());
 
-        return new Id($this->pdo->lastInsertId());
+        return new Barcode($id, $barcode->getDeviceId(), $barcode->getCode(), $barcode->getCount(), $barcode->getDate());
     }
 
     public function getAll(int $limit = 100, int $offset = 0): array
