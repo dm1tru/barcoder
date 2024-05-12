@@ -70,8 +70,7 @@ class MysqlBarcodeRepository implements BarcodeRepositoryInterface
         int $device_id = null,
         int $limit = 100,
         int $offset = 0
-    ): array
-    {
+    ): array {
 
         $query =
             "SELECT id, count, code, UNIX_TIMESTAMP(date) as date, device_id

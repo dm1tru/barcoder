@@ -23,13 +23,12 @@ class Api
     private QueueInterface $queue;
 
     public function __construct(
-        RequestInterface           $request,
-        User                       $user,
-        DeviceRepositoryInterface  $deviceRepository,
+        RequestInterface $request,
+        User $user,
+        DeviceRepositoryInterface $deviceRepository,
         BarcodeRepositoryInterface $barcodeRepository,
-        QueueInterface             $queue
-    )
-    {
+        QueueInterface $queue
+    ) {
         $this->request = $request;
         $this->user = $user;
         $this->deviceRepository = $deviceRepository;
