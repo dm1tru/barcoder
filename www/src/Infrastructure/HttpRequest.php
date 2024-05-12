@@ -3,6 +3,7 @@
 namespace Dm1tru\Barcoder\Infrastructure;
 
 use Dm1tru\Barcoder\Application\RequestInterface;
+use Dm1tru\Barcoder\Domain\ValueObject\Method;
 use Dm1tru\Barcoder\Domain\ValueObject\Token;
 
 class HttpRequest implements RequestInterface
@@ -36,5 +37,26 @@ class HttpRequest implements RequestInterface
         }
 
         return new Token($token);
+    }
+
+    public function getMethod(): Method
+    {
+        switch ($_SERVER['REQUEST_METHOD']) {
+            case 'GET':
+                return Method::GET;
+            case 'POST':
+                return Method::POST;
+            case 'PUT':
+                return Method::PUT;
+            case 'DELETE':
+                return Method::DELETE;
+            default:
+                return Method::UNKNOWN;
+        }
+    }
+
+    public function getParameters(): array
+    {
+        return $_REQUEST;
     }
 }

@@ -55,7 +55,10 @@ class App
             throw new \Exception('Not found user', 403);
         }
 
-        $api = new Api($request->getPath(), $user, $deviceRepository, $barcodeRepository);
+        $queue = new RabbitMQQueue();
+
+
+        $api = new Api($request, $user, $deviceRepository, $barcodeRepository, $queue);
         $response = $api->getResponse();
 
         var_dump($response->getJson());

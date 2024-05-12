@@ -10,7 +10,15 @@ interface BarcodeRepositoryInterface
 {
     public function add(Barcode $barcode): Barcode;
 
-    public function getAll(int $limit = 100, int $offset = 0): array;
+    public function getAll(
+        int $start_id = null,
+        int $end_id = null,
+        int $start_date = null,
+        int $end_date = null,
+        int $device_id = null,
+        int $limit = 100,
+        int $offset = 0
+    ): array;
 
     public function getAfterDate(Date $date, int $limit = 100, int $offset = 0): array;
 }
