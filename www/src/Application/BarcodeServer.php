@@ -23,11 +23,12 @@ class BarcodeServer
     private array $device_ids = [];
 
     public function __construct(
-        \Psr\Log\LoggerInterface $logger,
-        DeviceRepositoryInterface $deviceRepository,
+        \Psr\Log\LoggerInterface   $logger,
+        DeviceRepositoryInterface  $deviceRepository,
         BarcodeRepositoryInterface $barcodeRepository,
-        QueueInterface $queue
-    ) {
+        QueueInterface             $queue
+    )
+    {
         $this->deviceRepository = $deviceRepository;
         $this->barcodeRepository = $barcodeRepository;
 
@@ -92,12 +93,19 @@ class BarcodeServer
             $count = 1;
         }
 
+        $codeObj = new Code($code);
+
+        if (!$codeObj->getCode()) {
+            $connection->send('Wrong code');
+            return;
+        }
+
         $dev_id = $this->device_ids[$connection->id];
 
         $barcode = new Barcode(
             new Id(0),
             new Id($dev_id),
-            new Code($code),
+            $codeObj,
             new Count($count),
             new Date()
         );
