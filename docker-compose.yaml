@@ -49,7 +49,6 @@ services:
     networks:
       - dev-net
 
-
   php-cli:
     build:
       context: ./docker/php-cli
@@ -76,6 +75,18 @@ services:
       - ./volumes/rabbitmq:/var/lib/rabbitmq
     ports:
       - 15672:15672
+    networks:
+      - dev-net
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    hostname: swagger
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./volumes/swagger/swagger.yaml:/swagger.yaml
+    environment:
+      SWAGGER_JSON: /swagger.yaml
     networks:
       - dev-net
 
