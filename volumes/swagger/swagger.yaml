@@ -10,6 +10,7 @@ info:
 
 servers:
   - url: http://barcoder.ds4.ru/api/
+  - url: http://barcoder.local/api/
 tags:
   - name: device
     description: Работа с устройствами
@@ -127,7 +128,7 @@ paths:
                   $ref: '#/components/schemas/Code'
       security:
         - api_key: []
-    put:
+    post:
       tags:
         - code
       summary: Добавление нового штрих-кода
