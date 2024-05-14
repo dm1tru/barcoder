@@ -11,7 +11,7 @@ services:
     volumes:
       - ./www:/var/www/html/
       - ./volumes/socket:/socket
-      - /etc/letsencrypt/live:/etc/letsencrypt/live
+      - /etc/letsencrypt:/etc/letsencrypt
     depends_on:
       - php
     networks:
