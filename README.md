@@ -27,5 +27,5 @@ docker run --network=barcoder_dev-net \
 ## 3. REST-api
 Доступ к api осуществляется по адресу `/api/` 
 
-[Swagger](https://barcoder.ds4.ru/swagger) документация
+[Swagger](https://barcoder.ds4.ru/swagger/) документация
 
