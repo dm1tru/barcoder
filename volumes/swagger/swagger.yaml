@@ -42,7 +42,7 @@ paths:
     get:
       tags:
         - device
-      summary: Список устройств
+      summary: Свойства устройства
       description: Возвращает информацию об устройстве
       operationId: getDeviceId
       parameters:
