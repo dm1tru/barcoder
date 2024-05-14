@@ -68,7 +68,7 @@ paths:
     get:
       tags:
         - code
-      summary: Список устройств
+      summary: Список штрих-кодов
       description: Возвращает список штрих-кодов
       operationId: getCodes
       parameters:
@@ -92,13 +92,13 @@ paths:
             type: integer
         - name: start_date
           in: query
-          description: 'UNIX time дата начала'
+          description: 'Unix дата начала'
           required: false
           schema:
             type: integer   
         - name: end_date
           in: query
-          description: 'UNIX time дата окончания'
+          description: 'Unix дата окончания'
           required: false
           schema:
             type: integer        
@@ -130,7 +130,7 @@ paths:
     put:
       tags:
         - code
-      summary: Добавление нового штрихкода
+      summary: Добавление нового штрих-кода
       description: 'Осуществляет добавление нового штрих-кода'
       operationId: addCode
       parameters:
@@ -148,7 +148,7 @@ paths:
             type: string
         - name: date
           in: query
-          description: UNIX дата создания
+          description: Unix дата создания
           schema:
             type: integer
         - name: count
