@@ -9,7 +9,7 @@ info:
   version: 1.0.1
 
 servers:
-  - url: http://barcoder.ds4.ru/api/
+  - url: https://barcoder.ds4.ru/api/
   - url: http://barcoder.local/api/
 tags:
   - name: device
