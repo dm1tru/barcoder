@@ -3,6 +3,7 @@
 /www/config.ini
 /www/composer.lock
 /www/log/*
+!/www/log/.gitkeep
 /www/helpers/
 /volumes/mysql/*
 !/volumes/mysql/.gitkeep
