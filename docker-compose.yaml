@@ -12,6 +12,8 @@ services:
       - ./www:/var/www/html/
       - ./volumes/socket:/socket
       - /etc/letsencrypt:/etc/letsencrypt
+    environment:
+      DOMAIN: ${DOMAIN}
     depends_on:
       - php
     networks:
