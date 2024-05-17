@@ -77,7 +77,7 @@ class MysqlBarcodeRepository implements BarcodeRepositoryInterface
             FROM barcodes
             WHERE 1=1
             {start_id} {end_id} {start_date} {end_date} {device_id}
-            ORDER BY id
+            ORDER BY id DESC
             LIMIT :limit OFFSET :offset";
 
         if (is_null($start_id)) {
