@@ -1,3 +1,4 @@
+.env
 /www/vendor/
 .idea
 /www/config.ini
