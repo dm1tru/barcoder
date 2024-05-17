@@ -22,6 +22,8 @@ class MysqlDeviceRepository implements DeviceRepositoryInterface
     private PDOStatement $_qInsert;
     private PDOStatement $_qGetAll;
     private PDOStatement $_qGetById;
+    private PDOStatement $_qDeleteById;
+    private ?PDOStatement $_qUpdate;
 
     public function __construct()
     {
@@ -29,7 +31,7 @@ class MysqlDeviceRepository implements DeviceRepositoryInterface
 
         $this->_qInsert = $this->pdo->prepare(
             "INSERT INTO devices 
-            SET name= :name, host = :host, order = :order"
+            SET name= :name, host = :host, `order` = :order"
         );
 
         $this->_qGetAll = $this->pdo->prepare(
@@ -41,6 +43,11 @@ class MysqlDeviceRepository implements DeviceRepositoryInterface
         $this->_qGetById = $this->pdo->prepare(
             "SELECT id, name, host, `order`
             FROM devices
+            WHERE id = ?"
+        );
+
+        $this->_qDeleteById = $this->pdo->prepare(
+            "DELETE FROM devices
             WHERE id = ?"
         );
     }
@@ -56,7 +63,6 @@ class MysqlDeviceRepository implements DeviceRepositoryInterface
     {
         $this->_qInsert->execute([
             'name' => $device->getName()->getName(),
-            'count' => $device->getCount()->getCount(),
             'host' => $device->getHost()->getIp(),
             'order' => $device->getOrder()->getOrder()
         ]);
@@ -94,5 +100,53 @@ class MysqlDeviceRepository implements DeviceRepositoryInterface
             new Ip($ret['host']),
             new Order($ret['order'])
         );
+    }
+
+    public function update(id $id, ?Name $name, ?Ip $ip, ?Order $order): Device
+    {
+        $sql = "UPDATE devices
+            SET {fields}
+            WHERE id = :id";
+
+        $update_fields = [];
+        if ($name) {
+            $update_fields[] = "name = :name";
+        }
+
+        if ($ip) {
+            $update_fields[] = "host = :host";
+        }
+
+        if ($order) {
+            $update_fields[] = "`order` = :order";
+        }
+
+        $sql = str_replace('{fields}', implode(', ', $update_fields), $sql);
+
+
+        $this->_qUpdate = $this->pdo->prepare($sql);
+
+        $params = [
+            'id' => $id->getId()
+        ];
+        if ($name) {
+            $params['name'] = $name->getName();
+        }
+
+        if ($ip) {
+            $params['host'] = $ip->getIp();
+        }
+
+        if ($order) {
+            $params['order'] = $order->getOrder();
+        }
+
+        $this->_qUpdate->execute($params);
+        return $this->getById($id);
+    }
+
+    public function deleteById(Id $id): void
+    {
+        $this->_qDeleteById->execute([$id->getId()]);
     }
 }

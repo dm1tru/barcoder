@@ -6,6 +6,9 @@ use Dm1tru\Barcoder\Domain\Entity\Barcode;
 use Dm1tru\Barcoder\Domain\Entity\Device;
 use Dm1tru\Barcoder\Domain\ValueObject\Date;
 use Dm1tru\Barcoder\Domain\ValueObject\Id;
+use Dm1tru\Barcoder\Domain\ValueObject\Ip;
+use Dm1tru\Barcoder\Domain\ValueObject\Name;
+use Dm1tru\Barcoder\Domain\ValueObject\Order;
 
 interface DeviceRepositoryInterface
 {
@@ -14,4 +17,8 @@ interface DeviceRepositoryInterface
     public function getAll(): array;
 
     public function getById(Id $id): ?Device;
+
+    public function update(id $id, ?Name $name, ?Ip $ip, ?Order $order): Device;
+
+    public function deleteById(Id $id): void;
 }

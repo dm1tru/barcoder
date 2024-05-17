@@ -39,7 +39,44 @@ paths:
         
       security:
         - api_key: []
-  /devices/{id}:
+    post:
+      tags:
+        - device
+      summary: Добавление устройства
+      description: Добавление нового устройства
+      operationId: getDevicesPost
+      parameters:
+        - name: name
+          in: query
+          description: Название
+          required: true
+          schema:
+            type: string
+        - name: host
+          in: query
+          description: Хост
+          required: true
+          schema:
+            type: string
+        - name: order
+          in: query
+          description: Порядок
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+             schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Id'
+        
+      security:
+        - api_key: []
+  /device/{id}:
     get:
       tags:
         - device
@@ -63,7 +100,68 @@ paths:
                $ref: '#/components/schemas/Device'
         
       security:
-        - api_key: []        
+        - api_key: []   
+    put:
+      tags:
+        - device
+      summary: Изменение устройства
+      description: Обновление указанных полей
+      operationId: getDevicePut
+      parameters:
+        - name: id
+          in: path
+          description: ID устройства
+          required: true
+          schema:
+            type: integer
+        - name: name
+          in: query
+          description: Название
+          required: false
+          schema:
+            type: string
+        - name: host
+          in: query
+          description: Хост
+          required: false
+          schema:
+            type: string
+        - name: order
+          in: query
+          description: Порядок
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+             schema:
+               $ref: '#/components/schemas/Device'
+        
+      security:
+        - api_key: [] 
+    delete:
+      tags:
+        - device
+      summary: Удаление устройства
+      description: Удаление устройства из базы
+      operationId: getDeviceDelete
+      parameters:
+        - name: id
+          in: path
+          description: ID устройства
+          required: true
+          schema:
+            type: integer
+  
+      responses:
+        '200':
+          description: OK
+        
+      security:
+        - api_key: []   
         
   /codes:
     get:
@@ -174,6 +272,12 @@ paths:
  
 components:
   schemas:
+    Id:
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
     Device:
       properties:
         id:
